@@ -1,5 +1,11 @@
 const express = require("express");
+const bodyParser = require("body-parser"); // parses information and puts it on the req.body property
+
 const app = express();
+
+// Globally lets all route handlers apply this middleware function
+// app.use for middleware
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
   res.send(`
@@ -15,16 +21,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/", (req, res) => {
-  // get access to email, password, passwordConfirmation
-  req.on("data", (data) => {
-    const parsed = data.toString("utf8").split("&");
-    const formData = [];
-    for (let pair of parsed) {
-      const [key, value] = pair.split("=");
-      formData[key] = value;
-    }
-    console.log(formData);
-  });
+  console.log(req.body);
   res.send("Account created!");
 });
 
