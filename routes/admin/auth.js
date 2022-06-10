@@ -4,11 +4,13 @@ const signUpTemplate = require("../../views/admin/auth/signup");
 const signInTemplate = require("../../views/admin/auth/signin");
 const router = express.Router();
 //Replace app with router. this will link up all the routes back to the index.js
-const { validationResult } = require("express-validator");
+const { check, validationResult } = require("express-validator");
 const {
   requireEmail,
   requirePassword,
   requirePasswordConfirmation,
+  requireEmailExist,
+  requireValidPassword,
 } = require("./validators");
 
 router.get("/signup", (req, res) => {
@@ -38,20 +40,22 @@ router.get("/signout", (req, res) => {
 });
 
 router.get("/signin", (req, res) => {
-  res.send(signInTemplate());
+  res.send(signInTemplate({}));
 });
 
-router.post("/signin", async (req, res) => {
-  const { email, password } = req.body;
-  const loginUser = await usersRepo.getOneBy({ email });
-  if (!loginUser) return res.send("Email not found");
-  const validPassword = await usersRepo.comparePasswords(
-    loginUser.password,
-    password
-  );
-  if (!validPassword) return res.send("Invalid password");
-  req.session.userId = loginUser.id;
-  res.send("You are signed in");
-});
+router.post(
+  "/signin",
+  [requireEmailExist, requireValidPassword],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.send(signInTemplate({ req, errors }));
+    }
+    const { email } = req.body;
+    const loginUser = await usersRepo.getOneBy({ email });
+    req.session.userId = loginUser.id;
+    res.send("You are signed in");
+  }
+);
 
 module.exports = router;
