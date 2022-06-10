@@ -1,0 +1,25 @@
+[
+  {
+    "email": "test@test.com"
+  },
+  {
+    "email": "maxsoccerssport@hotmail.com",
+    "password": "test",
+    "id": "e66e5a68"
+  },
+  {
+    "email": "maxsoccessport@hotmail.com",
+    "password": "test",
+    "id": "0740a143"
+  },
+  {
+    "email": "jmlong.dev@gmail.com",
+    "password": "1341af18ab474cef1fa696ef7bddf4fb744a8152d5c8b80daac2218c6bb9d7cd5543b8de4456e36f98ea4ec217e043dab3e511f78ce7b47e2056c7af7702e74a.bcea2eb4ccaeed2c",
+    "id": "fabedd2b"
+  },
+  {
+    "email": "test1@test.com",
+    "password": "8794fff164ffd4af217b2319e6359bcba2962958fe327ed6d1ce3a63e3aa4ef4805d2e862f997c53614d0be887e29431ae6f84ea5c1d1b1f6bb561e4d7a23257.49f4f74d43d93d74",
+    "id": "83f25f99"
+  }
+]
