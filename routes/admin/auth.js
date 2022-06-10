@@ -4,7 +4,12 @@ const signUpTemplate = require("../../views/admin/auth/signup");
 const signInTemplate = require("../../views/admin/auth/signin");
 const router = express.Router();
 //Replace app with router. this will link up all the routes back to the index.js
-const { check, validationResult } = require("express-validator");
+const { validationResult } = require("express-validator");
+const {
+  requireEmail,
+  requirePassword,
+  requirePasswordConfirmation,
+} = require("./validators");
 
 router.get("/signup", (req, res) => {
   res.send(signUpTemplate({ req }));
@@ -12,19 +17,13 @@ router.get("/signup", (req, res) => {
 
 router.post(
   "/signup",
-  [
-    check("email").trim().normalizeEmail().isEmail(),
-    check("password").trim().isLength({ min: 4, max: 20 }),
-    check("passwordConfirmation").trim().isLength({ min: 4, max: 20 }),
-  ], // these get attached to the req object that will continue to be passed
+  [requireEmail, requirePassword, requirePasswordConfirmation], // these get attached to the req object that will continue to be passed
   async (req, res) => {
     const errors = validationResult(req);
-    console.log(errors);
+    if (!errors.isEmpty()) {
+      return res.send(signUpTemplate({ req, errors }));
+    }
     const { email, password, passwordConfirmation } = req.body;
-    const existingUser = await usersRepo.getOneBy({ email });
-    if (existingUser) return res.send("Email in use");
-    if (password !== passwordConfirmation)
-      return res.send("passwords must match");
     // Create a user in our user repo to reperesent this person
     const user = await usersRepo.create({ email, password });
     // Store the id of that user inside the users cookie
