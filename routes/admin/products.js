@@ -18,8 +18,8 @@ router.get("/admin/products/new", (req, res) => {
 
 router.post(
   "/admin/products/new",
-  [requireTitle, requirePrice],
-  upload.single("image"),
+  upload.single("image"), // first parse and get access to req.body
+  [requireTitle, requirePrice], // then get validated
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -27,9 +27,7 @@ router.post(
     }
     const image = req.file.buffer.toString("base64");
     const { title, price } = req.body;
-
     await productsRepo.create({ title, price, image });
-
     res.send("Submitted");
   }
 );

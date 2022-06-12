@@ -6,6 +6,7 @@ module.exports = {
     .trim()
     .isLength({ min: 5, max: 40 })
     .withMessage("Must be between 5 and 40 characters"),
+
   requirePrice: check("price")
     .trim()
     .toFloat()
