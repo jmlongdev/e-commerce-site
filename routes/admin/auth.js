@@ -4,7 +4,8 @@ const signUpTemplate = require("../../views/admin/auth/signup");
 const signInTemplate = require("../../views/admin/auth/signin");
 const router = express.Router();
 //Replace app with router. this will link up all the routes back to the index.js
-const { check, validationResult } = require("express-validator");
+const { handleErrors } = require("./middlewares");
+
 const {
   requireEmail,
   requirePassword,
@@ -20,12 +21,9 @@ router.get("/signup", (req, res) => {
 router.post(
   "/signup",
   [requireEmail, requirePassword, requirePasswordConfirmation], // these get attached to the req object that will continue to be passed
+  handleErrors(signUpTemplate),
   async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.send(signUpTemplate({ req, errors }));
-    }
-    const { email, password, passwordConfirmation } = req.body;
+    const { email, password } = req.body;
     // Create a user in our user repo to reperesent this person
     const user = await usersRepo.create({ email, password });
     // Store the id of that user inside the users cookie
@@ -46,11 +44,8 @@ router.get("/signin", (req, res) => {
 router.post(
   "/signin",
   [requireEmailExist, requireValidPassword],
+  handleErrors(signInTemplate),
   async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.send(signInTemplate({ req, errors }));
-    }
     const { email } = req.body;
     const loginUser = await usersRepo.getOneBy({ email });
     req.session.userId = loginUser.id;
