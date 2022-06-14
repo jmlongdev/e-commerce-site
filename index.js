@@ -9,7 +9,6 @@ const app = express();
 
 // Globally lets all route handlers apply this middleware function
 // app.use for middleware
-
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
