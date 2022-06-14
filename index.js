@@ -4,6 +4,7 @@ const cookieSession = require("cookie-session");
 const authRouter = require("./routes/admin/auth");
 const adminProductsRouter = require("./routes/admin/products");
 const productsRouter = require("./routes/products");
+const cartsRouter = require("./routes/cart");
 const app = express();
 
 // Globally lets all route handlers apply this middleware function
@@ -20,6 +21,7 @@ app.use(
 app.use(authRouter);
 app.use(adminProductsRouter);
 app.use(productsRouter);
+app.use(cartsRouter);
 
 app.listen(3000, () => {
   console.log("listening");
